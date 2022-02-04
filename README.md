@@ -1,2 +1,2 @@
-# RoboWunderkinduino
+# RoboWunduino
 Arduino Library for Robo Wunderkind
