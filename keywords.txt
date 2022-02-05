@@ -1,0 +1,47 @@
+#######################################
+# Syntax Coloring Map RoboWunduino
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+RoboWunderkind	KEYWORD1	
+System	KEYWORD1    
+Motor	KEYWORD1	
+ServoMotor	KEYWORD1	
+Claw	KEYWORD1	
+Hinge	KEYWORD1	
+Display	KEYWORD1	
+LED	KEYWORD1	
+Ultrasonic	KEYWORD1	
+IMU	KEYWORD1
+Button	KEYWORD1
+LineTracker	KEYWORD1
+Light	KEYWORD1
+Motion	KEYWORD1
+Knob	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+read_gyroscope	KEYWORD2
+read_accelerometer	KEYWORD2
+read_ultrasonic	KEYWORD2
+rgb	KEYWORD2
+blink	KEYWORD2
+custom_animation	KEYWORD2
+custom_image	KEYWORD2
+animation	KEYWORD2
+text	KEYWORD2
+set_position	KEYWORD2
+read_encoder	KEYWORD2
+stop	KEYWORD2
+stop_all	KEYWORD2
+backward	KEYWORD2
+torque	KEYWORD2
+play_audio	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
