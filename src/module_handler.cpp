@@ -508,7 +508,8 @@ void check_configuration(void)
       break;
     }
   }
-  //if(changed == true) print_module_config();
+  //if(changed == true) print_pneumonic_modules();
+  //print_pneumonic_modules();
   save_build();
 }
 

@@ -5,6 +5,8 @@
 #include "module_functions.h"
 #include "module_handler.h"
 
+void scan();
+
 /*----------------------------------------------------------- System -----------------------------------------------------------------*/
 
 class _System
@@ -135,7 +137,7 @@ class _Ultrasonic
 {
   public:
     _Ultrasonic();
-    uint16_t read_ultrasonic(uint8_t module_num);
+    uint16_t read(uint8_t module_num);
     
   private:
  

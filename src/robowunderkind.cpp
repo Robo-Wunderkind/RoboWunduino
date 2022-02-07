@@ -132,9 +132,13 @@ esp_err_t get_mac_address(uint8_t *mac)
     // Ensure we hard reset the modules
     this->enable_power(BOOST_CONVERTER_OFF);
     this->enable_power(BOOST_CONVERTER_ON);
-    
-    //vTaskDelay(250 / portTICK_PERIOD_MS);
-    //this->scan();
+  }
+
+  void RoboWunderkind::begin()
+  {
+    // for some reason this kicks things off. We need to attempt to use one module once then we can scan and find everything.
+    // Just scanning does not work, we get i2c busy errors...
+    this->Ultrasonic.read(3); 
   }
 
   void RoboWunderkind::print_attached_modules()

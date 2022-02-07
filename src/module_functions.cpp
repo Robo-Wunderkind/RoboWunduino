@@ -372,7 +372,7 @@ bool read_lightsensor(uint8_t module_index, float *light)
   }
   else
   {
-    //printf("Unable to send I2C-command, lightsensor %d not attached\n", module_index + 1);
+    printf("Unable to send I2C-command, lightsensor %d not attached\n", module_index + 1);
     *light = 0;
     return false;
   }
@@ -389,7 +389,7 @@ bool read_button_state(uint8_t module_index, uint8_t *button_state)
   }
   else
   {
-    //printf("Unable to send I2C-command, button %d not attached\n", module_index + 1);
+    printf("Unable to send I2C-command, button %d not attached\n", module_index + 1);
     *button_state = 0;
     return false;
   }

@@ -65,11 +65,13 @@ class RoboWunderkind //: public LED , public Motor etc
     _LED LED = _LED();
     _Ultrasonic Ultrasonic = _Ultrasonic();
     _IMU IMU = _IMU();
+    _Motion Motion = _Motion();
     _Button Button = _Button();
     _LineTracker LineTracker = _LineTracker();
     _Light Light = _Light();  
   
     RoboWunderkind();
+    void begin();
     void print_attached_modules();
     void enable_power(bool on_off);
     void mac_address();

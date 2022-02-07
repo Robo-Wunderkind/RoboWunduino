@@ -323,7 +323,7 @@ void scan()
       
     }
 
-    uint16_t _Ultrasonic::read_ultrasonic(uint8_t module_num)
+    uint16_t _Ultrasonic::read(uint8_t module_num)
     {
       float sensor_value;
       bool result = 0;
