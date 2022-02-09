@@ -69,20 +69,82 @@ class RoboWunderkind //: public LED , public Motor etc
     _Button Button = _Button();
     _LineTracker LineTracker = _LineTracker();
     _Light Light = _Light();  
-  
+
+
+    /*
+     *  Robo Wunderkind Super Class Constructor
+     *
+     *  
+     */
     RoboWunderkind();
+
+    /*
+     *  Kicks off the system, scans for modules
+     *
+     */
     void begin();
+
+    /*
+     *  Prints a pneumonic list of attached modules by name and index #
+     *
+     */
     void print_attached_modules();
+
+    /*
+     *  Enables 5V power to external modules via the ring connectors
+     *
+     */
     void enable_power(bool on_off);
+
+    /*
+     *  Prints the mac address of the system
+     *
+     */
     void mac_address();
 
+    /*
+     *  waits for all module actions to complete before proceeding (blocking)
+     *
+     */
     void wait_for_all_actions();
-    void wait_for_action(uint8_t mod_type, uint8_t mod_id);
-    void wait_for_all_triggers();
-    void wait_for_trigger(uint8_t mod_type, uint8_t mod_id);
-    bool is_attached(uint8_t mod_type, uint8_t id);
 
-    
+    /*
+     *  waits for a particular module's action to complete before proceeding (blocking)
+     *  
+     *  Parameters:
+     *    - uint8_t module_type: which module type?
+     *    - uint8_t mod_id: which module index?
+     *
+     */
+    void wait_for_action(uint8_t mod_type, uint8_t mod_id);
+
+    /*
+     *  waits for all module sensor triggers to occur before proceeding (blocking)
+     *
+     */
+    void wait_for_all_triggers();
+
+    /*
+     *  waits for a particular module's sensor trigger to complete before proceeding (blocking)
+     *  
+     *  Parameters:
+     *    - uint8_t module_type: which module type?
+     *    - uint8_t mod_id: which module index?
+     *
+     */
+    void wait_for_trigger(uint8_t mod_type, uint8_t mod_id);
+
+    /*
+     *  Returns true if module is attached, false if not
+     *
+     *  Parameters:
+     *    - uint8_t module_type: which module type?
+     *    - uint8_t mod_id: which module index?
+     *  
+     *  Return value: 
+     *    - bool attached: true if module is attached, false if not
+     */
+    bool is_attached(uint8_t mod_type, uint8_t id);
 };
 
-#endif /* MAIN_ROBO_NODE_H_ */
+#endif

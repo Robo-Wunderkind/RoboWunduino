@@ -4,6 +4,8 @@ uint8_t R = 0;
 uint8_t G = 0;
 uint8_t B = 0;
 
+uint8_t led_index = 0;
+
 RoboWunderkind RW = RoboWunderkind();
 
 void change_colour()
@@ -24,7 +26,7 @@ void change_colour()
     if(B > New_B) B--;
     else if(B < New_B) B++;
     delay(20);
-    RW.LED.rgb(R, G, B, 0);
+    RW.LED.rgb(led_index, R, G, B);
   }
 }
 

@@ -30,26 +30,26 @@ void scan()
       
     }
 
-    bool _Motor::torque(uint8_t module_num, int8_t torque_pct)
+    bool _Motor::torque(uint8_t module_index, int8_t torque_pct)
     {
       bool result = false;
-      result = set_motor_pwm(module_num, torque_pct); 
+      result = set_motor_pwm(module_index, torque_pct); 
       if(!result) scan();
       return result;
     }
   
-    bool _Motor::speed(uint8_t module_num, int8_t speed_pct)
+    bool _Motor::speed(uint8_t module_index, int8_t speed_pct)
     {
       bool result = false;
-      result = set_motor_pwm(module_num, speed_pct); 
+      result = set_motor_pwm(module_index, speed_pct); 
       if(!result) scan();
       return result;
     }
   
-    bool _Motor::stop(uint8_t module_num)
+    bool _Motor::stop(uint8_t module_index)
     {
       bool result = false;
-      result = set_motor_pwm(module_num, 0); 
+      result = set_motor_pwm(module_index, 0); 
       if(!result) scan();
       return result;
     }
@@ -289,7 +289,7 @@ void scan()
       
     }
 
-    bool _LED::blink(uint8_t r, uint8_t g, uint8_t b, uint8_t blinks, float frequency, uint8_t module_num)
+    bool _LED::blink(uint8_t module_index, uint8_t r, uint8_t g, uint8_t b, uint8_t blinks, float frequency)
     {
       bool result = false;
       if(frequency == 0) frequency = 1;
@@ -297,8 +297,8 @@ void scan()
       uint8_t timeHSB = (uint16_t)period >> 8;
       uint8_t timeLSB = (uint8_t)period;
   
-      set_module_action_trigger_id(RGB_LED, module_num, 1, MODULES_FIRST_ACTION_OR_TRIGGER);
-      result = set_rgb_action(module_num, r, g, b, timeHSB, timeLSB, blinks ,0);
+      set_module_action_trigger_id(RGB_LED, module_index, 1, MODULES_FIRST_ACTION_OR_TRIGGER);
+      result = set_rgb_action(module_index, r, g, b, timeHSB, timeLSB, blinks ,0);
       if(!result)
       {
         scan();
@@ -306,10 +306,10 @@ void scan()
       return result;
     }
   
-    bool _LED::rgb(uint8_t r, uint8_t g, uint8_t b, uint8_t module_num)
+    bool _LED::rgb(uint8_t module_index, uint8_t r, uint8_t g, uint8_t b)
     {
       bool result = false;
-      result = set_rgb_color(module_num, r, g, b);
+      result = set_rgb_color(module_index, r, g, b);
       if(!result) scan();
       return result;
     }
@@ -323,11 +323,11 @@ void scan()
       
     }
 
-    uint16_t _Ultrasonic::read(uint8_t module_num)
+    uint16_t _Ultrasonic::read(uint8_t module_index)
     {
       float sensor_value;
       bool result = 0;
-      result = read_ultrasonic_distance(module_num, &sensor_value);
+      result = read_ultrasonic_distance(module_index, &sensor_value);
       if(!result) scan();
       return sensor_value;
     }
@@ -339,18 +339,18 @@ void scan()
       
     }
 
-    bool _IMU::read_gyroscope(uint8_t module_num, float *gyrox, float *gyroy, float *gyroz)
+    bool _IMU::read_gyroscope(uint8_t module_index, float *gyrox, float *gyroy, float *gyroz)
     {
       bool result;
-      result = read_gyro(module_num, gyrox, gyroy, gyroz);
+      result = read_gyro(module_index, gyrox, gyroy, gyroz);
       if(!result) scan();
       return result;
     }
   
-    bool _IMU::read_accelerometer(uint8_t module_num, float *accx, float *accy, float *accz)
+    bool _IMU::read_accelerometer(uint8_t module_index, float *accx, float *accy, float *accz)
     {
       bool result;
-      result = read_accelerometer_values(module_num, accx, accy, accz);
+      result = read_accelerometer_values(module_index, accx, accy, accz);
       if(!result) scan();
       return result;
     }
@@ -362,10 +362,10 @@ void scan()
       
     }
 
-    uint8_t _Button::read(uint8_t module_num)
+    uint8_t _Button::read(uint8_t module_index)
     {
       uint8_t state = 0;
-      bool result = read_button_state(module_num, &state);
+      bool result = read_button_state(module_index, &state);
       if(!result) scan();
       return state;
     }
@@ -390,11 +390,11 @@ void scan()
       
     }
 
-    uint16_t _Light::read(uint8_t module_num)
+    uint16_t _Light::read(uint8_t module_index)
     {
       float sensor_value;
       bool result = 0;
-      result = read_lightsensor(module_num, &sensor_value);
+      result = read_lightsensor(module_index, &sensor_value);
       if(!result) scan();
       return sensor_value;
     }
@@ -406,10 +406,10 @@ void scan()
       
     }
 
-    uint8_t _Motion::read(uint8_t module_num)
+    uint8_t _Motion::read(uint8_t module_index)
     {
       uint8_t state = 0;
-      bool result = read_pir_state(module_num, &state);
+      bool result = read_pir_state(module_index, &state);
       if(!result) scan();
       return state;
     }

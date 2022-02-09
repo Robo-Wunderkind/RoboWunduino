@@ -4,6 +4,11 @@ uint8_t R = 0;
 uint8_t G = 255;
 uint8_t B = 0;
 
+uint8_t blinks = 5;
+uint8_t frequency = 1;
+
+uint8_t led_index = 0;
+
 RoboWunderkind RW = RoboWunderkind();
 
 void setup() 
@@ -14,8 +19,7 @@ void setup()
 
 void loop() 
 {  
-  //uint8_t r, uint8_t g, uint8_t b, uint8_t blinks, float frequency, uint8_t module_num
-  RW.LED.blink(R, G, B, 5, 1, 0);
+  RW.LED.blink(led_index, R, G, B, blinks, frequency);
   RW.wait_for_all_actions();
   delay(5000);
 }
