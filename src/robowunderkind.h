@@ -7,6 +7,7 @@
 #define MAIN_ROBOWUNDERKIND_H_
 
 #include "Arduino.h"
+#include "audio.h"
 #include "i2c_bus.h"
 #include "modules.h"
 #include "module_functions.h"
@@ -69,6 +70,8 @@ class RoboWunderkind //: public LED , public Motor etc
     _Button Button = _Button();
     _LineTracker LineTracker = _LineTracker();
     _Light Light = _Light();  
+    _Knob Knob = _Knob();  
+    _Weather Weather = _Weather();  
 
 
     /*
@@ -101,6 +104,19 @@ class RoboWunderkind //: public LED , public Motor etc
      *
      */
     void mac_address();
+
+    /*
+     *  Plays a PCM audio clip from memory
+     *  
+     *  Parameters:
+     *    - const uint8_t* audiosample_to_play: the audio clip array
+     *    - int tot_size: sizeof(audiosample_to_play)
+     *
+     *  Returns
+     *    - bool success: true if audio was found and played back, false otherwise
+     *
+     */
+    bool audio(const uint8_t* audiosample_to_play, int tot_size);
 
     /*
      *  waits for all module actions to complete before proceeding (blocking)

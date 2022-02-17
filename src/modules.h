@@ -612,9 +612,26 @@ class _Knob
      *    - uint16_t position: returns an analog reading of the knob position 0-1023 0-> 180 degrees
      */
     uint16_t read(uint8_t module_index);
-    
-  private:
-    
+};
+
+/*------------------------------------------------------------ Weather -----------------------------------------------------------------*/
+// Need to isolate the sensors much better to remove them from any heat
+class _Weather
+{
+  public:
+    _Weather();
+
+    uint16_t read_tvoc(uint8_t module_index);
+    uint16_t read_ethanol(uint8_t module_index);
+    uint16_t read_h2(uint8_t module_index);
+    uint16_t read_eco2(uint8_t module_index);
+    float    read_temp_c(uint8_t module_index);
+    float    read_temp_f(uint8_t module_index);
+    float    read_pressure_mb(uint8_t module_index);
+    float    read_pressure_kpa(uint8_t module_index);
+    float    read_humidity_rh(uint8_t module_index);
+    float    read_analog_temp(uint8_t module_index);
+    float    read_altitude_m(uint8_t module_index, float sealevel_mb);
 };
 
 /*

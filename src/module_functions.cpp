@@ -510,7 +510,142 @@ bool read_accelerometer_state(uint8_t module_index)
   else
   {
     //printf("Unable to send I2C-command, accelerometer %d not attached\n", module_index + 1);
-    return -1;
+    return false;
+  }
+}
+
+int32_t twos_comp(uint32_t num, uint8_t bits)
+{
+  int32_t power = pow(2, bits);
+  if(num > power/2.0) num = num - power;
+  return num;
+}
+
+bool read_gas_sensor(uint8_t module_index, uint16_t *tvoc, uint16_t *eco2, uint16_t *h2, uint16_t *ethanol)
+{
+  uint8_t message_bytes = 14;
+  uint8_t data_rd[message_bytes];
+
+  if (i2c_read_module_data(WEATHER1_ADD + module_index, data_rd, message_bytes) != 0)
+  {
+    *tvoc =    (((uint16_t)data_rd[5]<<8) | data_rd[6]);
+    *tvoc = twos_comp((int32_t)*tvoc, 16);
+    *eco2 =    (((uint16_t)data_rd[7]<<8) | data_rd[8]);
+    *eco2 = twos_comp((int32_t)*eco2, 16);
+    *h2 =      (((uint16_t)data_rd[9]<<8) | data_rd[10]);
+    *h2 = twos_comp((int32_t)*h2, 16);
+    *ethanol = (((uint16_t)data_rd[11]<<8) | data_rd[12]);
+    *ethanol = twos_comp((int32_t)*ethanol, 16);
+    return true;
+  }
+  else
+  {
+    //printf("Unable to send I2C-command, weather %d not attached\n", module_index + 1);
+    *tvoc = 0;
+    *eco2 = 0;
+    *h2 = 0;
+    *ethanol = 0;
+    return false;
+  }
+}
+
+bool read_analog_TempHum(uint8_t module_index, uint16_t *temperature, uint16_t *humidity)
+{
+  uint8_t message_bytes = 6;
+  uint8_t data_rd[message_bytes];
+
+  if (i2c_read_module_data(WEATHER1_ADD + module_index, data_rd, message_bytes) != 0)
+  { 
+    *humidity =     (((uint16_t)data_rd[1]<<8) | data_rd[2]);
+    *temperature =  (((uint16_t)data_rd[3]<<8) | data_rd[4]);
+    return true;
+  }
+  else
+  {
+    //printf("Unable to send I2C-command, weather %d not attached\n", module_index + 1);
+    *humidity = 0;
+    *temperature = 0;
+    return false;
+  }
+}
+
+bool read_spl_coef(uint8_t module_index, int16_t *c0, int16_t *c1, int32_t *c00, int16_t *c01, int32_t *c10, int16_t *c11, int16_t *c20, int16_t *c21, int16_t *c30)
+{
+  uint8_t message_bytes = 38;
+  uint8_t data_rd[message_bytes];
+
+  if (i2c_read_module_data(WEATHER1_ADD + module_index, data_rd, message_bytes) != 0)
+  {
+    *c0 = (((uint16_t)data_rd[19]<<4) | ((uint16_t)data_rd[20]>>4));
+    *c0 = twos_comp((uint32_t)*c0, 12);
+    *c1 = (((uint16_t)data_rd[20]&0xF) << 8) | (uint16_t)data_rd[21];
+    *c1 = twos_comp((uint32_t)*c1, 12);
+    *c00 = ((uint32_t)data_rd[22] << 12) | ((uint32_t)data_rd[23] << 4) | ((uint32_t)data_rd[24] >> 4);
+    *c00 = twos_comp((uint32_t)*c00, 20);
+    *c10 = (((uint32_t)data_rd[24]&0xF) << 16) | ((uint32_t)data_rd[25] << 8) | ((uint32_t)data_rd[26]);
+    *c10 = twos_comp((uint32_t)*c10, 20);
+    *c01 = ((uint16_t)data_rd[27] << 8) | (uint16_t)data_rd[28];
+    *c01 = twos_comp((uint32_t)*c01, 16);
+    *c11 = ((uint16_t)data_rd[29] << 8) | (uint16_t)data_rd[30];
+    *c11 = twos_comp((uint32_t)*c11, 16);
+    *c20 = ((uint16_t)data_rd[31] << 8) | (uint16_t)data_rd[32];
+    *c20 = twos_comp((uint32_t)*c20, 16);
+    *c21 = ((uint16_t)data_rd[33] << 8) | (uint16_t)data_rd[34];
+    *c21 = twos_comp((uint32_t)*c21, 16);
+    *c30 = ((uint16_t)data_rd[35] << 8) | (uint16_t)data_rd[36];
+    *c30 = twos_comp((uint32_t)*c30, 16);
+/*
+    for(uint8_t i = 0; i < 18; i ++)
+    {
+      printf("Byte %d = %d \n", 19+i, data_rd[19+i]);
+    }
+    printf("C0 = %d\n C1 = %d\n C00 = %d\n C10 = %d\n C01 = %d\n C11 = %d\n C20 = %d\n C21 = %d\n C30 = %d\n", *c0, *c1, *c00, *c10, *c01, *c11, *c20, *c21, *c30);
+    */
+    return true;
+  }
+  else
+  {
+    //printf("Unable to send I2C-command, weather %d not attached\n", module_index + 1);
+    *c0 = 0;
+    *c1 = 0;
+    *c00 = 0;
+    *c10 = 0;
+    *c01 = 0;
+    *c11 = 0;
+    *c20 = 0;
+    *c21 = 0;
+    *c30 = 0;
+    return false;
+  }
+}
+
+bool read_spl(uint8_t module_index, float *temperature_sc, float *pressure_sc)
+{
+  uint8_t message_bytes = 22;
+  uint8_t data_rd[message_bytes];
+  int32_t temperature_in = 0;
+  int32_t pressure_in = 0;
+
+  //float SPL_SC[8] = {524288.0, 1572864.0, 3670016.0, 7864320.0, 253952.0, 516096.0, 1040384.0, 2088960.0};
+
+  if (i2c_read_module_data(WEATHER1_ADD + module_index, data_rd, message_bytes) != 0)
+  {
+    temperature_in = ((uint32_t)data_rd[13]<<16) | ((uint32_t)data_rd[14]<<8) | (uint32_t)data_rd[15];
+    *temperature_sc = twos_comp((uint32_t)temperature_in, 24);
+
+    pressure_in = ((uint32_t)data_rd[16]<<16) | ((uint32_t)data_rd[17]<<8) | (uint32_t)data_rd[18];
+    pressure_in = twos_comp((uint32_t)pressure_in, 24);
+
+    *temperature_sc = ((float)temperature_in)/7864320.0;
+    *pressure_sc = ((float)pressure_in)/7864320.0;
+    return true;
+  }
+  else
+  {
+    //printf("Unable to send I2C-command, weather %d not attached\n", module_index + 1);
+    *temperature_sc = 0;
+    *pressure_sc = 0;
+    return false;
   }
 }
 
@@ -801,30 +936,6 @@ bool set_distance_trigger(uint8_t module_index, uint8_t condition, uint8_t dista
   return write_to_module(MODULE_ULTRASONIC, (ULTRASONIC1_ADD + module_index), module_index, data, 5); 
 }
 
-/*
-void set_ir_trigger(uint8_t byte_ll, uint8_t byte_l, uint8_t byte_h, uint8_t byte_hh)
-{
-  uint8_t modules_enum = modules_type_and_index_to_enum(MODULE_IRBLASTER, 0);
-  uint8_t message_bytes = 5;
-  if (check_if_module_attached(modules_enum))
-  {
-    uint8_t data[message_bytes];
-    uint8_t address = IR1_ADD;
-    
-
-    data[0] = 0x10;
-    data[1] = byte_ll;
-    data[2] = byte_l;
-    data[3] = byte_h;
-    data[4] = byte_hh;
-    
-    i2c_write_module(address, data, message_bytes + 1);
-    printf("Setting IR Trigger: %d, %d, %d, %d, %d\n", data[0], data[1], data[2], data[3], data[4]);
-  }
-  else printf("Can`t send I2C-command, ir %d not attached\n", 0);
-}
-*/
-
 bool set_soundlevel_trigger(uint8_t module_index, uint8_t condition, uint8_t soundlevel)
 {
   uint8_t data[5];
@@ -1044,6 +1155,11 @@ bool reset_knob(uint8_t module_index)
   return write_to_module(MODULE_KNOB, (KNOB1_ADD + module_index), module_index, data, 3);
 }
 
+bool reset_weather(uint8_t module_index)
+{
+  return true;
+}
+
 bool check_mod(uint8_t address, uint8_t enumm, int8_t action_id1, int8_t action_id2)
 {
   return true;
@@ -1203,12 +1319,7 @@ bool check_knobs(uint8_t address, uint8_t enumm, int8_t action_id1, int8_t actio
   else return false;
 }
 
-/*
-void reset_irblaster_trigger(uint8_t module_index)
+bool check_weather(uint8_t address, uint8_t enumm, int8_t action_id1, int8_t action_id2)
 {
-  uint8_t data[3];
-  data[0] = 0x11;
-  data[1] = 0;
-  write_to_module(MODULE_IRBLASTER, (IR1_ADD + module_index), module_index, data);
+ return false;
 }
-*/

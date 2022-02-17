@@ -40,6 +40,7 @@
 #define HINGE         17
 #define DISPLAY       18
 #define KNOB          19
+#define WEATHER       20
 
 #define BYTE_TO_BINARY(byte)  \
   (byte & 0x80 ? '1' : '0'), \
@@ -71,7 +72,8 @@
 #define MODULE_DISPLAY          0x12
 #define MODULE_BUMP             0x13
 #define MODULE_KNOB             0x14
-#define NUM_MODULE_TYPES        0x15     // Total number of unique modules
+#define MODULE_WEATHER          0x15   
+#define NUM_MODULE_TYPES        0x16     // Total number of unique modules
 #define MODULE_BOOTLOADER       0xFE   
 
 #define SYSTEM_BUILD            32768
@@ -152,7 +154,9 @@ typedef enum
   KNOB2_ADD,
   KNOB3_ADD,
   KNOB4_ADD,
-  MAX_I2C_ADDR  // 0x78
+  WEATHER1_ADD,
+  WEATHER2_ADD,
+  MAX_I2C_ADDR  // 0x7A
 } module_addresses;
 
 // BITMASK FOR CONNECTED MODULES:
@@ -234,6 +238,8 @@ typedef enum
   MOD_KNOB2, 
   MOD_KNOB3, 
   MOD_KNOB4, 
+  MOD_WEATHER1,
+  MOD_WEATHER2,
   MODULES_NUMBER 
 } module_instance; // length is 76
 
@@ -254,6 +260,7 @@ typedef enum
 #define MAX_HINGES        4
 #define MAX_CLAWS         4
 #define MAX_KNOBS         4
+#define MAX_WEATHERS      2
 
 typedef   bool (*Reset)(uint8_t module_index);
 typedef   bool (*Interrupt_Check)(uint8_t address, uint8_t enumm, int8_t action_id1, int8_t action_id2);

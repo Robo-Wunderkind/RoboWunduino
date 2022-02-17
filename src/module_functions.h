@@ -208,6 +208,10 @@ bool get_last_ir_cmd(uint8_t module_index);
 bool reset_irblaster_trigger(uint8_t module_index);
 bool read_gyro(uint8_t module_index, float *gyrox, float *gyroy, float *gyroz);
 bool read_accelerometer_values(uint8_t module_index, float *accx, float *accy, float *accz);
+bool read_gas_sensor(uint8_t module_index, uint16_t *tvoc, uint16_t *eco2, uint16_t *h2, uint16_t *ethanol);
+bool read_analog_TempHum(uint8_t module_index, uint16_t *temperature, uint16_t *humidity);
+bool read_spl_coef(uint8_t module_index, int16_t *c0, int16_t *c1, int32_t *c00, int16_t *c01, int32_t *c10, int16_t *c11, int16_t *c20, int16_t *c21, int16_t *c30);
+bool read_spl(uint8_t module_index, float *temperature_sc, float *pressure_sc);
 
 /*
  * 	All set_action and set_trigger functions are used for Robo Code app.
@@ -290,6 +294,7 @@ bool reset_servo_proper(uint8_t module_index);
 bool reset_claw(uint8_t module_index);
 bool reset_hinge(uint8_t module_index);
 bool reset_knob(uint8_t module_index);
+bool reset_weather(uint8_t module_index);
 
 bool reset_mod(uint8_t module_index);
 
@@ -311,6 +316,7 @@ bool check_hinges(uint8_t address, uint8_t enumm, int8_t action_id1, int8_t acti
 bool check_claws(uint8_t address, uint8_t enumm, int8_t action_id1, int8_t action_id2);
 bool check_mod(uint8_t address, uint8_t enumm, int8_t action_id1, int8_t action_id2);
 bool check_knobs(uint8_t address, uint8_t enumm, int8_t action_id1, int8_t action_id2);
+bool check_weather(uint8_t address, uint8_t enumm, int8_t action_id1, int8_t action_id2);
 
 
 #endif /* MAIN_MODULES_H_ */

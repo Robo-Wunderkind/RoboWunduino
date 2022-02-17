@@ -11,13 +11,8 @@ void scan()
     module_disconnection_handler();
     vTaskDelay(75 / portTICK_PERIOD_MS);
   }
+  printf("Scanning\n");
 }
-
-/*----------------------------------------------------------- System -----------------------------------------------------------------*/
-    _System::_System()
-    {
-      
-    }
 
 
 /*========================================================= ACTUATORS =======================================================================================*/
@@ -412,5 +407,125 @@ void scan()
       bool result = read_pir_state(module_index, &state);
       if(!result) scan();
       return state;
+    }
+
+/*-------------------------------------------------------- Knob -----------------------------------------------------------------*/
+
+    _Knob::_Knob()
+    {
+      
+    }
+
+    uint16_t _Knob::read(uint8_t module_index)
+    {
+      uint16_t knob = 0;
+      bool result = read_knob(module_index, &knob);
+      if(!result) scan();
+      return knob;
+    }
+
+
+/*-------------------------------------------------------- Weather Sensor -----------------------------------------------------------------*/
+
+    _Weather::_Weather()
+    {
+      
+    }
+
+    uint16_t _Weather::read_tvoc(uint8_t module_index)
+    {
+      uint16_t tvoc, eco2, h2, ethanol = 0;
+      bool result = read_gas_sensor(module_index, &tvoc, &eco2, &h2, &ethanol);
+      if(!result) scan();
+      return tvoc;
+    }
+
+    uint16_t _Weather::read_h2(uint8_t module_index)
+    {
+      uint16_t tvoc, eco2, h2, ethanol = 0;
+      bool result = read_gas_sensor(module_index, &tvoc, &eco2, &h2, &ethanol);
+      if(!result) scan();
+      return h2;
+    }
+
+    uint16_t _Weather::read_eco2(uint8_t module_index)
+    {
+      uint16_t tvoc, eco2, h2, ethanol = 0;
+      bool result = read_gas_sensor(module_index, &tvoc, &eco2, &h2, &ethanol);
+      if(!result) scan();
+      return eco2;
+    }
+
+    uint16_t _Weather::read_ethanol(uint8_t module_index)
+    {
+      uint16_t tvoc, eco2, h2, ethanol = 0;
+      bool result = read_gas_sensor(module_index, &tvoc, &eco2, &h2, &ethanol);
+      if(!result) scan();
+      return ethanol;
+    }
+
+    float _Weather::read_humidity_rh(uint8_t module_index)
+    {
+      uint16_t temp, hum = 0;
+      float rh = 0;
+      bool result = read_analog_TempHum(module_index, &temp, &hum);
+      if(!result) scan();
+      rh = (125.0*((float)hum/1023.0)) - 12.5;
+      return rh;
+    }
+
+    float _Weather::read_analog_temp(uint8_t module_index)
+    {
+      uint16_t temp, hum = 0;
+      float temp_c = 0;
+      bool result = read_analog_TempHum(module_index, &temp, &hum);
+      if(!result) scan();
+      temp_c = (218.75*((float)temp/1023.0))  - 66.875;
+      return temp_c;
+    }
+
+    float _Weather::read_temp_c(uint8_t module_index)
+    {
+      int16_t c0, c1, c01, c11, c20, c21, c30 = 0;
+      int32_t c00, c10;
+      float temp_sc, press_sc, temp_c = 0;
+      bool result = read_spl_coef(module_index, &c0, &c1, &c00, &c01, &c10, &c11, &c20, &c21, &c30);
+      result &= read_spl(module_index, &temp_sc, &press_sc);
+      if(!result) scan();
+      temp_c = (c0/2.0) + (c1*temp_sc);
+      return temp_c;
+    }
+
+    float _Weather::read_temp_f(uint8_t module_index)
+    {
+      float tempc;
+      tempc = read_temp_c(module_index);
+      return (tempc*(9/5.0))+32;
+    }
+
+    float _Weather::read_pressure_mb(uint8_t module_index)
+    {
+      int16_t c0, c1, c01, c11, c20, c21, c30 = 0;
+      int32_t c00, c10;
+      float temp_sc, press_sc, prs_mb = 0;
+      bool result = read_spl_coef(module_index, &c0, &c1, &c00, &c01, &c10, &c11, &c20, &c21, &c30);
+      result &= read_spl(module_index, &temp_sc, &press_sc);
+      if(!result) scan();
+      prs_mb = c00+(press_sc*c10)+(press_sc *c20)+(press_sc*c30)+(temp_sc*c01)+(temp_sc*press_sc*c11)+(press_sc*c21);
+      prs_mb = prs_mb/100.0;
+      return prs_mb;
+    }
+
+    float _Weather::read_pressure_kpa(uint8_t module_index)
+    {
+      return this->read_pressure_mb(module_index)/10.0;
+    }
+
+    float _Weather::read_altitude_m(uint8_t module_index, float sealevel_mb)
+    {
+      float altitude, pressure_mb = 0;
+      pressure_mb = this->read_pressure_mb(module_index);
+      altitude = 44330*(1 - (pow(pressure_mb/sealevel_mb, 0.1903)));
+      return altitude;
     }
   

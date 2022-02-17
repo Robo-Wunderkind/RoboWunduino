@@ -10,7 +10,7 @@ uint8_t  drive_action_status = 0;
 Module_Type modules[NUM_MODULE_TYPES];
 
 static char* LABELS[]=  
-{"Servo2","N/A","Button","RGB","Matrix","Motor","Servo","Ultrasonic","Motion","Line Tracker","System","Light","N/A","N/A","N/A","Accelerometer","Claw","Hinge","Display","N/A","Knob"};
+{"Servo2","N/A","Button","RGB","Matrix","Motor","Servo","Ultrasonic","Motion","Line Tracker","System","Light","N/A","N/A","N/A","Accelerometer","Claw","Hinge","Display","N/A","Knob","Weather"};
 
 static const uint8_t SYSTEM_ENUMS[MAX_SYSTEMS]       = {MOD_SYSTEM};
 static const uint8_t MOTOR_ENUMS[MAX_MOTORS]         = {MOD_MOTOR1, MOD_MOTOR2, MOD_MOTOR3, MOD_MOTOR4, MOD_MOTOR5, MOD_MOTOR6};
@@ -28,6 +28,7 @@ static const uint8_t DISPLAY_ENUMS[MAX_DISPLAYS]     = {MOD_DISPLAY1, MOD_DISPLA
 static const uint8_t HINGE_ENUMS[MAX_HINGES]         = {MOD_HINGE1, MOD_HINGE2, MOD_HINGE3, MOD_HINGE4};
 static const uint8_t CLAW_ENUMS[MAX_CLAWS]           = {MOD_CLAW1, MOD_CLAW2, MOD_CLAW3, MOD_CLAW4};
 static const uint8_t KNOB_ENUMS[MAX_KNOBS]           = {MOD_KNOB1, MOD_KNOB2, MOD_KNOB3, MOD_KNOB4};
+static const uint8_t WEATHER_ENUMS[MAX_WEATHERS]     = {MOD_WEATHER1, MOD_WEATHER2};
 
 static const uint8_t *ENUMS_LIST[NUM_MODULE_TYPES] = {
   PROPER_SERVO_ENUMS, 
@@ -50,7 +51,8 @@ static const uint8_t *ENUMS_LIST[NUM_MODULE_TYPES] = {
   HINGE_ENUMS, 
   DISPLAY_ENUMS,
   NULL, 
-  KNOB_ENUMS
+  KNOB_ENUMS,
+  WEATHER_ENUMS
 };
 
 static const uint8_t MOD_TYPES[NUM_MODULE_TYPES] = {
@@ -74,7 +76,8 @@ static const uint8_t MOD_TYPES[NUM_MODULE_TYPES] = {
   MODULE_HINGE,
   MODULE_DISPLAY,
   0x13,
-  MODULE_KNOB
+  MODULE_KNOB,
+  MODULE_WEATHER
 };
 
 static const uint8_t max_mods[NUM_MODULE_TYPES] = {
@@ -98,7 +101,8 @@ static const uint8_t max_mods[NUM_MODULE_TYPES] = {
   MAX_HINGES,   // Hinges
   MAX_DISPLAYS, // Displays
   0x00,
-  MAX_KNOBS     // Knobs 
+  MAX_KNOBS,     // Knobs 
+  MAX_WEATHERS
 };
 
 static const uint8_t mod_start_addresses[NUM_MODULE_TYPES] = {
@@ -122,7 +126,8 @@ static const uint8_t mod_start_addresses[NUM_MODULE_TYPES] = {
   HINGE1_ADD, // Hinges
   DISPLAY1_ADD, // Displays
   0xFF,
-  KNOB1_ADD     // Knobs 
+  KNOB1_ADD,     // Knobs 
+  WEATHER1_ADD   // Weather Sensors
 };
 
 static bool (*resets[NUM_MODULE_TYPES]) (uint8_t index) = {
@@ -146,7 +151,8 @@ static bool (*resets[NUM_MODULE_TYPES]) (uint8_t index) = {
   reset_hinge,
   reset_display,
   reset_mod,
-  reset_knob
+  reset_knob,
+  reset_weather
 };
 
 static bool (*checks[NUM_MODULE_TYPES]) (uint8_t address, uint8_t enumm, int8_t action_id1, int8_t action_id2) = {
@@ -170,7 +176,8 @@ static bool (*checks[NUM_MODULE_TYPES]) (uint8_t address, uint8_t enumm, int8_t 
   check_hinges,
   check_displays,
   check_mod,  
-  check_knobs
+  check_knobs,
+  check_weather
 };
 
 static void print_addresses()
@@ -179,7 +186,7 @@ static void print_addresses()
   {
     for(uint8_t j = 0; j < modules[i].max_modules_of_type; j ++)
     {
-      //printf("MODULE_HANDLER: %02X -> Type %02X\n", modules[i].addresses[j], modules[i].type);
+      printf("MODULE_HANDLER: %02X -> Type %02X\n", modules[i].addresses[j], modules[i].type);
     }
   }
 }
@@ -204,7 +211,7 @@ static void create_module_structs()
       else modules[i].connections[j] = MODULE_DISCONNECTED;
     }
   }
-  //print_addresses();
+  print_addresses();
 }
 
 static bool module_type_and_id_check(uint8_t module_type, uint8_t module_index)
