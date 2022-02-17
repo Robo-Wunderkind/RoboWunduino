@@ -40,7 +40,7 @@ stop	KEYWORD2
 stop_all	KEYWORD2
 backward	KEYWORD2
 torque	KEYWORD2
-play_audio	KEYWORD2
+audio	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
