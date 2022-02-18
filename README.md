@@ -9,4 +9,4 @@ Therefore it is now possible to code your Robo Wunderkind using Arduino thanks t
 ![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/Robo-Wunderkind/RoboWunduino/latest)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Robo-Wunderkind/RoboWunduino)
 
-![Check General Formatting status](https://github.com/arduino/arduino-lint/actions/workflows/check-general-formatting-task.yml/badge.svg)
+![Check General Formatting status](https://github.com/Robo-Wunderkind/RoboWunduino)
