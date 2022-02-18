@@ -8,5 +8,3 @@ Therefore it is now possible to code your Robo Wunderkind using Arduino thanks t
 ![GitHub Release Date](https://img.shields.io/github/release-date/Robo-Wunderkind/RoboWunduino)
 ![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/Robo-Wunderkind/RoboWunduino/latest)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Robo-Wunderkind/RoboWunduino)
-
-![Check General Formatting status](https://github.com/Robo-Wunderkind/RoboWunduino)
