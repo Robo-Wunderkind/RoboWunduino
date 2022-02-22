@@ -4,15 +4,14 @@
 #include "Arduino.h"
 
 #define I2S_NUM                       I2S_NUM_0                   // I2s number.
-#define I2S_SAMPLE_RATE               11025                       // I2s sample rate
+#define I2S_SAMPLE_RATE_DEFUALT       11025                       // I2s sample rate
 #define I2S_SAMPLE_BITS               I2S_BITS_PER_SAMPLE_16BIT   // I2s data bits.
 #define I2S_BUF_DEBUG                 0                           // Enable display buffer for debug.
 #define I2S_READ_LEN                  (16 * 1024)                 // I2s read buffer length.
 #define I2S_FORMAT                    I2S_CHANNEL_FMT_ONLY_RIGHT  // I2s data format.
 #define I2S_CHANNEL_NUM               I2S_CHANNEL_MONO            // I2s channel number.
 
-void init_i2s(void);
-bool playback_audioclip(const uint8_t* audiosample_to_play, int tot_size);
+bool playback_audioclip(const uint8_t* audiosample_to_play, int tot_size, uint32_t sample_rate = I2S_SAMPLE_RATE_DEFUALT);
 
 // AUDIO FILE ARRAYS
 

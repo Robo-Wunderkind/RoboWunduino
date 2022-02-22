@@ -116,7 +116,7 @@ class RoboWunderkind //: public LED , public Motor etc
      *    - bool success: true if audio was found and played back, false otherwise
      *
      */
-    bool audio(const uint8_t* audiosample_to_play, int tot_size);
+    bool audio(const uint8_t* audiosample_to_play, int tot_size, uint32_t sample_rate = I2S_SAMPLE_RATE_DEFUALT);
 
     /*
      *  waits for all module actions to complete before proceeding (blocking)

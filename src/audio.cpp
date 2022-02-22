@@ -9,22 +9,32 @@
 #include "audio.h"
 #include "robowunderkind.h"
 
-uint8_t system_loudness_level = 100;
+static uint8_t system_loudness_level = 100;
+static bool i2s_installed = false;
 
-void init_i2s(void)
+static void init_i2s(uint32_t audio_sample_rate)
 {
   i2s_config_t i2s_config = {
        .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN),
-       .sample_rate =  I2S_SAMPLE_RATE,
+       .sample_rate =  audio_sample_rate,
        .bits_per_sample = I2S_SAMPLE_BITS,
        .channel_format = I2S_FORMAT,
        .communication_format = (i2s_comm_format_t)I2S_COMM_FORMAT_I2S_MSB,
        .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
-       .dma_buf_count = 2, 
-       .dma_buf_len = 64
+       .dma_buf_count = 8, 
+       .dma_buf_len = 64,
+       .use_apll = false
   };
   i2s_driver_install(I2S_NUM, &i2s_config, 0, NULL);  // Install and start i2s driver.
   i2s_set_dac_mode(I2S_DAC_CHANNEL_RIGHT_EN);         // Initializes Pin 25 DAC.
+  i2s_installed = true;
+}
+
+void deinit_i2s(void)
+{
+  i2s_set_dac_mode(I2S_DAC_CHANNEL_DISABLE);          // Deinitializes Pin 25 DAC.
+  i2s_driver_uninstall(I2S_NUM);                // Uninstall and start i2s driver.
+  i2s_installed = false;
 }
 
 int i2s_dac_data_scale(uint8_t* d_buff, uint8_t* s_buff, uint32_t len)
@@ -61,19 +71,23 @@ int i2s_dac_data_scale(uint8_t* d_buff, uint8_t* s_buff, uint32_t len)
     return (len * 2);
 }
 
-bool playback_audioclip(const uint8_t* audiosample_to_play, int tot_size)
+bool playback_audioclip(const uint8_t* audiosample_to_play, int tot_size, uint32_t sample_rate)
 {
   int offset = 0;
   int i2s_read_len = I2S_READ_LEN;
   uint8_t audiosample_found = 0;
   size_t bytes_written;
+  esp_err_t result;
+
+  if(!i2s_installed) init_i2s(sample_rate);
 
   if (tot_size > sizeof(uint8_t))
   {
     digitalWrite(GPIO_AUDIO_EN, HIGH);
     vTaskDelay(20 / portTICK_PERIOD_MS);
     uint8_t* i2s_write_buff = (uint8_t*) calloc(i2s_read_len, sizeof(char));
-    i2s_set_clk(I2S_NUM, I2S_SAMPLE_RATE, I2S_SAMPLE_BITS, I2S_CHANNEL_NUM);
+    result = i2s_set_clk(I2S_NUM, sample_rate, I2S_SAMPLE_BITS, I2S_CHANNEL_NUM);
+    if(result != ESP_OK) return false;
     i2s_start(I2S_NUM);
     vTaskDelay(20 / portTICK_PERIOD_MS);
 
@@ -87,10 +101,11 @@ bool playback_audioclip(const uint8_t* audiosample_to_play, int tot_size)
     }
 
     i2s_stop(I2S_NUM);
-    i2s_set_clk(I2S_NUM, I2S_SAMPLE_RATE, I2S_SAMPLE_BITS, I2S_CHANNEL_NUM);
+    i2s_set_clk(I2S_NUM, sample_rate, I2S_SAMPLE_BITS, I2S_CHANNEL_NUM);
     free(i2s_write_buff);
     digitalWrite(GPIO_AUDIO_EN, LOW);
     i2s_zero_dma_buffer(I2S_NUM);
+    deinit_i2s(); 
     return true;
   }
   return false;

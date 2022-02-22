@@ -103,7 +103,6 @@ void init_robo()
   init_gpios();
   init_i2c();
   init_modules();
-  init_i2s();
   heap_caps_check_integrity_all(true);
   
 }
@@ -182,8 +181,8 @@ esp_err_t get_mac_address(uint8_t *mac)
     get_mac_address(this->_mac_addr);
   }
 
-  bool RoboWunderkind::audio(const uint8_t* audiosample_to_play, int tot_size)
+  bool RoboWunderkind::audio(const uint8_t* audiosample_to_play, int tot_size, uint32_t sample_rate)
   {
-    return playback_audioclip(audiosample_to_play, tot_size);
+    return playback_audioclip(audiosample_to_play, tot_size, sample_rate);
   }
   

@@ -1,5 +1,6 @@
 #include "robowunderkind.h"
 #include "custom_audio.h"
+#include "driver/i2s.h"
 
 // Make your Text to Speech MP3 here https://ttsmp3.com/, or find any audio file you like
 // Convert MP3 to mono channel wav file 8 bit 11025 Hz here https://audio.online-convert.com/convert-to-wav
@@ -10,6 +11,7 @@
 
 RoboWunderkind RW = RoboWunderkind();
 bool state = false;
+float clk_rate;
 
 void setup() 
 {
@@ -25,12 +27,12 @@ void loop()
     if(state == true) 
     {
       RW.LED.rgb(0, 255, 255, 255);
-      play_audio(audiosample_lights_on, sizeof(audiosample_lights_on));
+      RW.audio(audiosample_lights_on, sizeof(audiosample_lights_on), 44100);
     }
     else
     {
       RW.LED.rgb(0, 0, 0, 0);
-      play_audio(audiosample_lights_off, sizeof(audiosample_lights_off));
+      RW.audio(audiosample_lights_off, sizeof(audiosample_lights_off), 44100);
     }
   }
 }

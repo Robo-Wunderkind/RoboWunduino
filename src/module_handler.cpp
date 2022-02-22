@@ -211,7 +211,7 @@ static void create_module_structs()
       else modules[i].connections[j] = MODULE_DISCONNECTED;
     }
   }
-  print_addresses();
+  //print_addresses();
 }
 
 static bool module_type_and_id_check(uint8_t module_type, uint8_t module_index)
