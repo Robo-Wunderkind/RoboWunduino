@@ -11,7 +11,6 @@
 
 RoboWunderkind RW = RoboWunderkind();
 bool state = false;
-float clk_rate;
 
 void setup() 
 {
