@@ -106,6 +106,19 @@ class RoboWunderkind //: public LED , public Motor etc
     void mac_address();
 
     /*
+     *  Gets the UUID from a specific module
+     *
+     */
+    bool module_uuid(uint8_t type, uint8_t index, uint8_t* UUID_data);
+
+    /*
+     *  Scans the I2C bus for new modules. 
+     *  This is done automatically if a command to a module fails
+     *
+     */
+    void scan_modules();
+
+    /*
      *  Plays a PCM audio clip from memory
      *  
      *  Parameters:

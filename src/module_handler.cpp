@@ -3,9 +3,9 @@
 #include "module_functions.h"
 #include "module_handler.h"
 
-uint64_t modules_bitmask[MODULE_64_CHUNKS] = {SYSTEM_BUILD, 0};
-uint64_t modules_bitmask_old[MODULE_64_CHUNKS] = {SYSTEM_BUILD, 0};
-uint8_t  drive_action_status = 0;
+static uint64_t modules_bitmask[MODULE_64_CHUNKS] = {SYSTEM_BUILD, 0};
+static uint64_t modules_bitmask_old[MODULE_64_CHUNKS] = {SYSTEM_BUILD, 0};
+static uint8_t  drive_action_status = 0;
 
 Module_Type modules[NUM_MODULE_TYPES];
 
@@ -293,7 +293,6 @@ uint8_t modules_address_to_type(uint8_t address)
 
 uint8_t modules_type_and_index_to_enum(uint8_t type, uint8_t index)
 {
-  //printf("MODULE TYPE = %d   MODULE INDEX = %d\n", type, index);
   return modules[type].module_enum[index];
 }
 

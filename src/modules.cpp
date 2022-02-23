@@ -14,12 +14,10 @@ void scan()
   printf("Scanning\n");
 }
 
-
 /*========================================================= ACTUATORS =======================================================================================*/
 
 /*----------------------------------------------------------- Motor -----------------------------------------------------------------*/    
-  
-    
+     
     _Motor::_Motor()
     {
       
@@ -375,7 +373,49 @@ void scan()
 
     bool _LineTracker::read_all(uint8_t module_index, linetracker_sensorvalues *values)
     {
-      read_linetracker_sensorvalues(module_index, values, LINETRACKER_SATURATION );
+      read_linetracker_sensorvalues(module_index, values, LINETRACKER_SATURATION);
+    }
+
+    bool _LineTracker::read_left(uint8_t module_index)
+    {
+      linetracker_sensorvalues values;
+      read_linetracker_sensorvalues(module_index, &values, LINETRACKER_SATURATION);
+      return values.bin_l;
+    }
+
+    bool _LineTracker::read_center(uint8_t module_index)
+    {
+      linetracker_sensorvalues values;
+      read_linetracker_sensorvalues(module_index, &values, LINETRACKER_SATURATION);
+      return values.bin_c;
+    }
+
+    bool _LineTracker::read_right(uint8_t module_index)
+    {
+      linetracker_sensorvalues values;
+      read_linetracker_sensorvalues(module_index, &values, LINETRACKER_SATURATION);
+      return values.bin_r;
+    }
+
+    uint16_t _LineTracker::read_left_prox(uint8_t module_index)
+    {
+      linetracker_sensorvalues values;
+      read_linetracker_sensorvalues(module_index, &values, LINETRACKER_SATURATION);
+      return values.l;
+    }
+
+    uint16_t _LineTracker::read_center_prox(uint8_t module_index)
+    {
+      linetracker_sensorvalues values;
+      read_linetracker_sensorvalues(module_index, &values, LINETRACKER_SATURATION);
+      return values.c;
+    }
+
+    uint16_t _LineTracker::read_right_prox(uint8_t module_index)
+    {
+      linetracker_sensorvalues values;
+      read_linetracker_sensorvalues(module_index, &values, LINETRACKER_SATURATION);
+      return values.r;
     }
 
 /*-------------------------------------------------------- Light Sensor -----------------------------------------------------------------*/

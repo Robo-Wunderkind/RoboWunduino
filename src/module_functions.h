@@ -27,6 +27,10 @@
 #define MAXVEL                                1000
 #define MINVEL                                15
 
+#define UUID_LEN                              16
+#define CMD_SET_UUID                          0x21
+#define CMD_GET_UUID                          0x22
+
 typedef struct
 {
   uint8_t bin_l;
@@ -41,26 +45,17 @@ typedef struct
   uint8_t black_white;
 } linetracker_sensorvalues;
 
-
 /*
- *  Different module set and get functions.
- *
- *
- * 	First step is checking if the module is attached. If not, get functions return 0.
- *
- *  All set functions fill an array with module command and data and then use "i2c_write_module"
- *  to write into the i2c in buffer of the module.
- *
- *  All get functions use "i2c_read_module_data" to read the modules i2c out buffer,
- *  then convert the needed data and return it.
+ *  Gets the UUID of the specified module
  *
  *  Parameters:
- *  	- uint8_t module_index: motor 1 has index 0, motor 2 has index 1, ...
- *  	- ...
+ *    - uint8_t address
+ *    - uint8_t* UUID_data
  *
- *  Return value:
- *  	- ...
+ *  Return value: 
+ *    - bool result
  */
+bool fetch_uuid(uint8_t address, uint8_t* UUID_data);
 
 /*
  *	Gets the current id set in the module's eeprom
@@ -68,8 +63,8 @@ typedef struct
  *  Parameters:
  *  	- I2C address
  *
- *  Return value: eeprom ID
- *  	-
+ *  Return value: 
+ *  	- uint8_t eeprom ID
  */
 uint8_t get_eeprom_module_id(uint8_t address);
 

@@ -8,7 +8,7 @@
 
 //=========================================================GPIO INIT==========================================================================================
 
-void init_gpios(void)
+static void init_gpios(void)
 {
   pinMode(GPIO_BOOST_IC_EN, OUTPUT);
   pinMode(GPIO_BOOST_EN, OUTPUT);   
@@ -24,7 +24,7 @@ void init_gpios(void)
 
 //================================================================PM FUNCTIONS==========================================================================
 
-uint8_t battery_voltage_to_percentage(uint16_t voltage)
+static uint8_t battery_voltage_to_percentage(uint16_t voltage)
 {
   if    (voltage < 3630)              return 0;
   else if ((voltage >= 3630) && (voltage < 3700))   return 10;
@@ -39,7 +39,7 @@ uint8_t battery_voltage_to_percentage(uint16_t voltage)
   else                          return 100;
 }
 
-uint8_t get_battery_level(void)
+static uint8_t get_battery_level(void)
 {
   float average_adc_value = 0;
   float   battery_voltage = 0;
@@ -59,13 +59,13 @@ uint8_t get_battery_level(void)
   return battery_percentage;
 }
 
-bool get_charger_onoff_state()
+static bool get_charger_onoff_state()
 {
   bool charger_on_off = digitalRead(GPIO_CHARGE_SENSE);
   return !charger_on_off;
 }
 
-uint8_t get_usb_state(void)
+static uint8_t get_usb_state(void)
 {
   uint8_t usb_state = digitalRead(GPIO_USB_DET);
   //printf("USB State = %d \n", usb_state);
@@ -75,7 +75,7 @@ uint8_t get_usb_state(void)
   else return USB_UNPLUGGED;
 }
 
-uint8_t get_battery_state (void)
+static uint8_t get_battery_state (void)
 {
   if    (get_charger_onoff_state() == 1 && get_usb_state() == 1) return BATTERY_CHARGING;
   else if (get_charger_onoff_state() == 0 && get_usb_state() == 1) return BATTERY_FULL;
@@ -142,9 +142,19 @@ esp_err_t get_mac_address(uint8_t *mac)
     this->Ultrasonic.read(3); 
   }
 
+  void RoboWunderkind::scan_modules()
+  {
+    scan();
+  }
+
   void RoboWunderkind::print_attached_modules()
   {
     print_pneumonic_modules();
+  }
+
+  bool RoboWunderkind::module_uuid(uint8_t type, uint8_t index, uint8_t* UUID_data)
+  {
+    return fetch_uuid(modules_enum_to_address(modules_type_and_index_to_enum(type, index)), UUID_data);
   }
 
   void RoboWunderkind::wait_for_all_actions()

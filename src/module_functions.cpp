@@ -9,8 +9,25 @@
 #include "module_handler.h"
 #include "module_functions.h"
 
-uint8_t matrix_data_string[33];
-uint8_t matrix_string_add = 0;
+static uint8_t matrix_data_string[33];
+static uint8_t matrix_string_add = 0;
+
+bool fetch_uuid(uint8_t address, uint8_t* UUID_data)
+{
+  uint8_t message_bytes = 32;
+  uint8_t data_rd[message_bytes];
+  uint8_t i2c_write_data[8];
+
+  i2c_write_data[0] = CMD_GET_UUID;
+  for(uint8_t i = 0; i < UUID_LEN; i++)
+  {
+    i2c_write_data[1] = i;
+    i2c_write_module(address, i2c_write_data, 8);
+    i2c_read_module_data(address, data_rd, 32);
+    UUID_data[i] = data_rd[25];
+  }
+  return true;
+}
 
 bool write_to_module(uint8_t module_type, uint8_t address, uint8_t module_index, uint8_t *data, uint8_t size_d)
 {
